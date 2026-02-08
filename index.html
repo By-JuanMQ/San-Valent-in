@@ -205,18 +205,45 @@
     document.getElementById('inputDisplay').textContent = input.padEnd(4, '•');
   }
   function checkPassword() {
-    if (input.length === 4) {
-      if (input === correctPassword) {
-        document.getElementById('passwordScreen').classList.remove('active');
-        document.getElementById('notepadScreen').classList.add('active');
-      } else {
-        alert('Contraseña incorrecta, intenta de nuevo');
-        input = '';
-        updateDisplay();
-      }
-    } else {
-      alert('Debes ingresar los 4 dígitos.');
-    }
+  const screen = document.getElementById('passwordScreen');
+
+  // 👉 FALTAN DÍGITOS
+  if (input.length !== 4) {
+    if (navigator.vibrate) navigator.vibrate(80);
+
+    screen.style.transition = "0.1s";
+    screen.style.transform = "translateX(-6px)";
+    setTimeout(() => screen.style.transform = "translateX(6px)", 100);
+    setTimeout(() => screen.style.transform = "translateX(0)", 200);
+
+    return;
+  }
+
+  // 👉 CONTRASEÑA CORRECTA
+  if (input === correctPassword) {
+    screen.style.transition = "0.3s ease";
+    screen.style.opacity = "0";
+
+    setTimeout(() => {
+      screen.classList.remove('active');
+      document.getElementById('notepadScreen').classList.add('active');
+      screen.style.opacity = "1";
+    }, 300);
+
+  } else {
+    // 👉 CONTRASEÑA INCORRECTA
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+    screen.style.transition = "0.1s";
+    screen.style.transform = "translateX(-10px)";
+    setTimeout(() => screen.style.transform = "translateX(10px)", 100);
+    setTimeout(() => screen.style.transform = "translateX(-5px)", 200);
+    setTimeout(() => screen.style.transform = "translateX(5px)", 300);
+    setTimeout(() => screen.style.transform = "translateX(0)", 400);
+
+    input = '';
+    updateDisplay();
+  }
   }
   function goBack() {
     document.getElementById('notepadScreen').classList.remove('active');
@@ -228,3 +255,4 @@
 </body>
 
 </html>
+
